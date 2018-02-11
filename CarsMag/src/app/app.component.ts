@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {Mailer} from './mailer';
+import {AdvanceMailer} from './advance-mailer';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +10,11 @@ import {Component} from '@angular/core';
 export class AppComponent {
   title = 'app';
 
-  confirmationOutput: string
+  confirmationOutput: string;
+
+  constructor(qwqlwh: Mailer) {
+    console.log('AppComponent constrcutor called');
+  }
 
   onConfimationOutput(xyz) {
     if (xyz === 'ok') {

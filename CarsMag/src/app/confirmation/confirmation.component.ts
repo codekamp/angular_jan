@@ -1,4 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Mailer} from '../mailer';
+import {GOOGLE_ANALYTICS_ID} from '../constants';
 
 @Component({
   selector: 'app-confirmation',
@@ -14,10 +17,12 @@ export class ConfirmationComponent implements OnInit {
   @Output() ok = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
-  constructor() {
+  constructor(private xyz: Mailer, @Inject('GOOGLE_ANALYTICS_ID') private gid: number) {
+    console.log('ConfirmationComponent constructor callled');
   }
 
   ngOnInit() {
+    this.xyz.send('prashant@codekamp.in', 'Hello world!');
   }
 
   okButtonClicked() {

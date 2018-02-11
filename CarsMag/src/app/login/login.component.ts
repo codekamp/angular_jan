@@ -12,4 +12,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  login(username, password) {
+    console.log('form submitted', username, password);
+  }
 }
