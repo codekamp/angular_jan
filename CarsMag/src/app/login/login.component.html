@@ -1,12 +1,15 @@
 <mat-card>
   <h2>Login</h2>
-  <form (submit)="login(xyz.value, pqr.value)">
-    <mat-form-field>
-      <input matInput placeholder="Enter username" #xyz>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Enter password" type="password" #pqr>
-    </mat-form-field>
-    <button mat-raised-button color="accent">Login</button>
+  <form (submit)="login()" [formGroup]="loginFormGroup">
+
+    <input [class.error]="usernameControl.touched && usernameControl.invalid" placeholder="Enter username" formControl="username Control" [(ngModel)]="username">
+    <span *ngIf="usernameControl.touched && usernameControl.invalid" style="color: red">Age should be...</span>
+
+    <input placeholder="Enter password" type="password" [formControl]="passwordControl">
+    <button mat-raised-button color="accent" [disabled]="loginFormGroup.invalid || loginFormGroup.pristine">Login
+    </button>
+    <button type="button" (click)="increment()">increment</button>
   </form>
+
+  <div>{{username}}</div>
 </mat-card>
