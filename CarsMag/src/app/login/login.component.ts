@@ -1,6 +1,14 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MyValidators} from '../my-validators';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-login',
@@ -9,15 +17,14 @@ import {MyValidators} from '../my-validators';
 })
 export class LoginComponent implements OnInit {
 
-  // @ViewChild('xyz') usernameField: ElementRef;
-  // @ViewChild('pqr') passwordField: ElementRef;
-
   usernameControl = new FormControl(null, [MyValidators.age]);
   passwordControl = new FormControl(null, [Validators.required]);
 
   loginFormGroup: FormGroup;
 
-  username: number;
+  countChanges = new Subject<number>();
+
+  count = 0;
 
   constructor() {
     this.loginFormGroup = new FormGroup({
@@ -27,22 +34,26 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.usernameControl.valueChanges.filter(a => a.length >= 3)
+    //   .debounceTime(300).distinctUntilChanged().subscribe(a => {
+    //   console.log('search for ' + a);
+    // });
+
+
+    const original = this.usernameControl.valueChanges;
+
+    const modified = original.map(a => Observable.from([a.length, a.length * 10]));
+
+    modified.subscribe(a => console.log('modified', a));
+
+    original.subscribe(a => console.log('user typed ' + a));
   }
 
   login() {
-    // console.log('form submitted', this.usernameField.nativeElement.value,
-    //   this.passwordField.nativeElement.value);
-    //
-    // this.usernameField.nativeElement.value = 'CodeKamp';
-
-
-    console.log(this.loginFormGroup.value);
-
-    const errors = Validators.email(this.usernameControl);
   }
 
-
   increment() {
-    this.username++;
+    this.count++;
+    this.countChanges.next(this.count);
   }
 }

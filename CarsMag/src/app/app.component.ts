@@ -1,26 +1,19 @@
-import {Component} from '@angular/core';
-import {Mailer} from './mailer';
-import {AdvanceMailer} from './advance-mailer';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import {LoginComponent} from './login/login.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild(LoginComponent) xyz: LoginComponent;
 
-  confirmationOutput: string;
+  ngOnInit() {
 
-  constructor(qwqlwh: Mailer) {
-    console.log('AppComponent constrcutor called');
   }
 
-  onConfimationOutput(xyz) {
-    if (xyz === 'ok') {
-      console.log('Delete the video');
-    } else {
-      console.log('Don\'t delete the video');
-    }
+  ngAfterViewInit() {
+    this.xyz.countChanges.subscribe(a => console.log('value from login component ' + a));
   }
 }
