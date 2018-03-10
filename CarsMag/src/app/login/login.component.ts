@@ -2,13 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MyValidators} from '../my-validators';
 import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/switchMap';
+import {EVENT_STUDENT_ADDED, EventBus, helloWorld} from '../services/event-bus.service';
 
 @Component({
   selector: 'app-login',
@@ -26,11 +21,16 @@ export class LoginComponent implements OnInit {
 
   count = 0;
 
-  constructor() {
+  constructor(private eventBus: EventBus) {
     this.loginFormGroup = new FormGroup({
       username: this.usernameControl,
-      password: this.passwordControl
+      password: this.passwordControl,
     });
+
+    helloWorld();
+
+    this.eventBus.on(EVENT_STUDENT_ADDED)
+      .subscribe(data => console.log('received event', data));
   }
 
   ngOnInit() {
@@ -50,9 +50,11 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+
   }
 
   increment() {
+    this.eventBus.emit(EVENT_STUDENT_ADDED, 'Hello world!');
     this.count++;
     this.countChanges.next(this.count);
   }

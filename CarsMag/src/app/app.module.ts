@@ -1,3 +1,4 @@
+import './rxjs-imports';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -10,6 +11,7 @@ import {AdvanceMailer} from './advance-mailer';
 import {MatButtonModule, MatCardModule, MatInputModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {EventBus} from './services/event-bus.service';
 
 
 @NgModule({
@@ -27,7 +29,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [Mailer, {provide: 'GOOGLE_ANALYTICS_ID', useValue: 10}],
+  providers: [Mailer, {provide: 'GOOGLE_ANALYTICS_ID', useValue: 10}, EventBus],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
