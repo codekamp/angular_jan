@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, DoCheck, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Mailer} from '../mailer';
 import {GOOGLE_ANALYTICS_ID} from '../constants';
@@ -8,7 +8,7 @@ import {GOOGLE_ANALYTICS_ID} from '../constants';
   templateUrl: './confirmation.component.html',
   styleUrls: ['./confirmation.component.css']
 })
-export class ConfirmationComponent implements OnInit {
+export class ConfirmationComponent implements OnInit, DoCheck {
 
   @Input() message = 'Are you sure?';
   @Input() okText = 'Yes, please!';
@@ -33,5 +33,9 @@ export class ConfirmationComponent implements OnInit {
   cancelButtonClicked() {
     console.log('cancelButtonClicked');
     this.cancel.emit();
+  }
+
+  ngDoCheck() {
+    console.log('ConfirmationComponent ngDoCheck');
   }
 }

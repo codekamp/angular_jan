@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DoCheck, HostBinding, HostListener, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MyValidators} from '../my-validators';
 import {Subject} from 'rxjs/Subject';
@@ -10,9 +10,12 @@ import {EVENT_STUDENT_ADDED, EventBus, helloWorld} from '../services/event-bus.s
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, DoCheck {
 
-  usernameControl = new FormControl(null, [MyValidators.age]);
+  @HostBinding('class.xyz') something = true;
+
+  loading = false;
+  usernameControl = new FormControl(null, [Validators.email]);
   passwordControl = new FormControl(null, [Validators.required]);
 
   loginFormGroup: FormGroup;
@@ -20,6 +23,10 @@ export class LoginComponent implements OnInit {
   countChanges = new Subject<number>();
 
   count = 0;
+
+  @HostListener('click') doSomething = () => {
+    console.log('apl login clicked');
+  }
 
   constructor(private eventBus: EventBus) {
     this.loginFormGroup = new FormGroup({
@@ -31,6 +38,10 @@ export class LoginComponent implements OnInit {
 
     this.eventBus.on(EVENT_STUDENT_ADDED)
       .subscribe(data => console.log('received event', data));
+  }
+
+  ngDoCheck() {
+    console.log('LoginComponent ngDoCheck');
   }
 
   ngOnInit() {
@@ -50,12 +61,14 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-
+    this.loading = !this.loading;
   }
 
   increment() {
-    this.eventBus.emit(EVENT_STUDENT_ADDED, 'Hello world!');
     this.count++;
-    this.countChanges.next(this.count);
+  }
+
+  onChange(event) {
+    this.count = +(event.srcElement.value);
   }
 }

@@ -1,7 +1,19 @@
 mat-card {
-  width: 500px;
+  min-width: 500px;
+}
+
+:host {
+  min-width: 500px;
 }
 
 .error {
   border: 1px solid red !important;
+}
+
+.highlighted {
+  color: #0f0;
+}
+
+.highlighted.extra {
+  font-weight: bold;
 }

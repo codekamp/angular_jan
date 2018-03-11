@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, DoCheck, OnInit, ViewChild, ViewChildren} from '@angular/core';
 import {LoginComponent} from './login/login.component';
 
 @Component({
@@ -6,14 +6,17 @@ import {LoginComponent} from './login/login.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  @ViewChild(LoginComponent) xyz: LoginComponent;
+export class AppComponent implements OnInit, DoCheck {
 
   ngOnInit() {
 
   }
 
-  ngAfterViewInit() {
-    this.xyz.countChanges.subscribe(a => console.log('value from login component ' + a));
+  ngDoCheck() {
+    console.log('AppComponent ngDoCheck');
+  }
+
+  doNothing() {
+
   }
 }
