@@ -4,6 +4,9 @@ import {MyValidators} from '../my-validators';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {EVENT_STUDENT_ADDED, EventBus, helloWorld} from '../services/event-bus.service';
+import {ActivatedRoute} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -24,24 +27,43 @@ export class LoginComponent implements OnInit, DoCheck {
 
   count = 0;
 
+  allError = [
+    'You need to login to read article',
+    'You need to login add an article'
+  ];
+
+  error: string;
+
+  alive: boolean;
+
   @HostListener('click') doSomething = () => {
     console.log('apl login clicked');
   }
 
-  constructor(private eventBus: EventBus) {
+
+  constructor(private eventBus: EventBus, private route: ActivatedRoute,
+              private http: HttpClient) {
+    this.alive = true;
     this.loginFormGroup = new FormGroup({
-      username: this.usernameControl,
+      email: this.usernameControl,
       password: this.passwordControl,
     });
 
     helloWorld();
 
-    this.eventBus.on(EVENT_STUDENT_ADDED)
-      .subscribe(data => console.log('received event', data));
+    this.eventBus.on('articleChanged')
+      .takeWhile(() => this.alive).subscribe(data => console.log('received event', data));
+
+    // const myObs$ = Observable.interval(100);
+    //
+    // myObs$.takeWhile(value => value < 10 || value > 15)
+    //   .subscribe(value => console.log('value is ' + value));
+    //
+    // myObs$.subscribe();
   }
 
   ngDoCheck() {
-    console.log('LoginComponent ngDoCheck');
+    // console.log('LoginComponent ngDoCheck');
   }
 
   ngOnInit() {
@@ -51,17 +73,28 @@ export class LoginComponent implements OnInit, DoCheck {
     // });
 
 
-    const original = this.usernameControl.valueChanges;
-
-    const modified = original.map(a => Observable.from([a.length, a.length * 10]));
-
-    modified.subscribe(a => console.log('modified', a));
-
-    original.subscribe(a => console.log('user typed ' + a));
+    // const original = this.usernameControl.valueChanges;
+    //
+    // const modified = original.map(a => Observable.from([a.length, a.length * 10]));
+    //
+    // modified.subscribe(a => console.log('modified', a));
+    //
+    // original.subscribe(a => console.log('user typed ' + a));
+    //
+    // this.route.queryParams.subscribe(qp => {
+    //   this.error = this.allError[+qp['reason'] - 1];
+    // });
   }
 
   login() {
-    this.loading = !this.loading;
+    this.loading = true;
+    const data = this.loginFormGroup.value;
+    const response = this.http.get('https://api.invidz.com/api/authenticate/', {params: data});
+    response.subscribe(res => {
+      console.log('data from API', res);
+      this.loading = false;
+    });
+    console.log('login function complete');
   }
 
   increment() {
@@ -71,4 +104,28 @@ export class LoginComponent implements OnInit, DoCheck {
   onChange(event) {
     this.count = +(event.srcElement.value);
   }
+
+  onDestroy() {
+    this.alive = false;
+  }
 }
+
+// /articles
+// GET - get list of summary of all articles
+// POST - add new article
+
+// /articles/:id
+// GET - get detail of the article
+// PUT - edit the article
+// PATCH - partically edit the article
+// DELETE - Delete the article
+
+
+// 1. What data?
+// 2. In what keys?
+// 3. Where? path/query params/header/body (GET can't have body)
+// 4. What format? (only if data is to be sent in body)
+
+
+// http://codekamp.in/login/prashant/hello - PATH
+// http://codekamp.in/login?uname=prashant&pswd=hello - query params

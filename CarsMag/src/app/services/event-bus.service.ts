@@ -8,14 +8,14 @@ export function helloWorld() {
 }
 
 export class EventBus {
-  private bus = new Subject<EventBusData>();
+  private bus$ = new Subject<EventBusData>();
 
   emit(eventName: string, data: any) {
-    this.bus.next({eventName: eventName, data: data});
+    this.bus$.next({eventName: eventName, data: data});
   }
 
   on<A>(eventName: string): Observable<A> {
-    return this.bus.asObservable()
+    return this.bus$.asObservable()
       .filter(event => event.eventName === eventName)
       .map(event => event.data as A);
   }

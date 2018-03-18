@@ -1,11 +1,12 @@
 <mat-card>
+  <p style="color: red" *ngIf="error">{{error}}</p>
   <h2 [ngClass]="{highlighted: count > 3, extra: count > 5}">Login</h2>
-  <form (submit)="login()">
+  <form [formGroup]="loginFormGroup" (submit)="login()">
 
     <input [class.error]="usernameControl.touched && usernameControl.invalid" placeholder="Enter username" [formControl]="usernameControl">
     <span *ngIf="usernameControl.touched && usernameControl.invalid" style="color: red">Age should be...</span>
 
-    <input name="password" placeholder="Enter password" [value]="count" (change)="onChange($event)">
+    <input name="password" placeholder="Enter password" formControlName="password">
     <button mat-raised-button color="accent" [disabled]="loginFormGroup.invalid || loginFormGroup.pristine">Login
     </button>
 
@@ -13,3 +14,5 @@
     <mat-spinner *ngIf="loading" [diameter]="30" [strokeWidth]="2"></mat-spinner>
   </form>
 </mat-card>
+
+<a routerLink="/article/22">Go to latest article</a>

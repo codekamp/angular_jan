@@ -13,7 +13,7 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   ngDoCheck() {
-    console.log('AppComponent ngDoCheck');
+    // console.log('AppComponent ngDoCheck');
   }
 
   doNothing() {
