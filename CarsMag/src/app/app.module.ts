@@ -19,6 +19,7 @@ import {SaveDataGuard} from './guards/save-data';
 import {NotFoundComponent} from './not-found/not-found.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {HttpClientModule} from '@angular/common/http';
+import {InvidzService} from './services/invidz';
 
 const myRoutes: Routes = [
   {path: 'login', component: LoginComponent, canDeactivate: [SaveDataGuard]},
@@ -54,7 +55,7 @@ const myRoutes: Routes = [
     MatProgressSpinnerModule,
     RouterModule.forRoot(myRoutes)
   ],
-  providers: [Mailer, {provide: 'GOOGLE_ANALYTICS_ID', useValue: 10}, EventBus, AuthGuard, SaveDataGuard],
+  providers: [Mailer, {provide: 'GOOGLE_ANALYTICS_ID', useValue: 10}, EventBus, AuthGuard, SaveDataGuard, InvidzService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

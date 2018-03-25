@@ -1,12 +1,10 @@
-import {ChangeDetectionStrategy, Component, DoCheck, HostBinding, HostListener, OnInit} from '@angular/core';
+import {Component, DoCheck, HostBinding, HostListener, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MyValidators} from '../my-validators';
 import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
-import {EVENT_STUDENT_ADDED, EventBus, helloWorld} from '../services/event-bus.service';
+import {EventBus, helloWorld} from '../services/event-bus.service';
 import {ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
 import {HttpClient} from '@angular/common/http';
+import {InvidzService} from '../services/invidz';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +40,7 @@ export class LoginComponent implements OnInit, DoCheck {
 
 
   constructor(private eventBus: EventBus, private route: ActivatedRoute,
-              private http: HttpClient) {
+              private http: HttpClient, private invidzService: InvidzService) {
     this.alive = true;
     this.loginFormGroup = new FormGroup({
       email: this.usernameControl,
@@ -88,13 +86,9 @@ export class LoginComponent implements OnInit, DoCheck {
 
   login() {
     this.loading = true;
-    const data = this.loginFormGroup.value;
-    const response = this.http.get('https://api.invidz.com/api/authenticate/', {params: data});
-    response.subscribe(res => {
-      console.log('data from API', res);
-      this.loading = false;
+    this.invidzService.login(this.loginFormGroup.value).subscribe(pqr => {
+      console.log(pqr.first_name);
     });
-    console.log('login function complete');
   }
 
   increment() {
