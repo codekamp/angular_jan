@@ -1,0 +1,4 @@
+<input type="text" #counter [value]="counterValue">
+<button (click)="increment()">Increase</button>
+<button (click)="decrement()">Decrease</button>
+<button (click)="set(+counter.value)">Set</button>

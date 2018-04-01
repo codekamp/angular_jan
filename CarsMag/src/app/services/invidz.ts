@@ -2,10 +2,12 @@ import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user';
 import {Observable} from 'rxjs/Observable';
 import {Video} from '../models/video';
+import {Injectable} from '@angular/core';
 
 const BASE_URL = 'https://api.invidz.com/api/';
 const TOKEN_KEY = 'login_token_key';
 
+@Injectable()
 export class InvidzService {
 
   constructor(private http: HttpClient) {

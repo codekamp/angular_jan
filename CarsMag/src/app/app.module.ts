@@ -20,6 +20,10 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {HttpClientModule} from '@angular/common/http';
 import {InvidzService} from './services/invidz';
+import { StoreTestComponent } from './store-test/store-test.component';
+import {StoreModule} from '@ngrx/store';
+import {rootReducer} from './reducers/index';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 const myRoutes: Routes = [
   {path: 'login', component: LoginComponent, canDeactivate: [SaveDataGuard]},
@@ -28,7 +32,8 @@ const myRoutes: Routes = [
     path: 'dashboard', canActivate: [AuthGuard], component: DashboardComponent,
     children: [
       {path: 'confirmation', component: ConfirmationComponent},
-      {path: 'article/:xyz', component: ArticleComponent}
+      {path: 'article/:xyz', component: ArticleComponent},
+      {path: 'store/test', component: StoreTestComponent},
     ]
   },
   {path: '**', component: NotFoundComponent}
@@ -41,7 +46,8 @@ const myRoutes: Routes = [
     ConfirmationComponent,
     ArticleComponent,
     NotFoundComponent,
-    DashboardComponent
+    DashboardComponent,
+    StoreTestComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +59,9 @@ const myRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    RouterModule.forRoot(myRoutes)
+    RouterModule.forRoot(myRoutes),
+    StoreModule.forRoot(rootReducer),
+    StoreDevtoolsModule.instrument({maxAge: 50})
   ],
   providers: [Mailer, {provide: 'GOOGLE_ANALYTICS_ID', useValue: 10}, EventBus, AuthGuard, SaveDataGuard, InvidzService],
   bootstrap: [AppComponent]
