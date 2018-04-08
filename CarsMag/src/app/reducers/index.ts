@@ -1,69 +1,59 @@
-import {User} from '../models/user';
-import {DECREMENT_ACTION, INCREMENT_ACTION, MyAction, SET_COUNT_ACTION} from '../actions/index';
-import {ActionReducerMap} from '@ngrx/store';
+import {ActionReducerMap, createSelector} from '@ngrx/store';
+import {
+  _getProjects, _getSelectedProjectId, _getSelectedProjectVideoIds, projectReducer,
+  ProjectState
+} from './projects';
+import {_getVideoEntities, videoReducer, VideoState} from './videos';
 
-
-export interface CounterState {
-  counter: number;
-}
-
-export const initialCounterState: CounterState = {
-  counter: 99
-};
-
-export interface UserState {
-  bestUser: User;
-  worstUser: User;
-  allUsers: User[];
-}
-
-export const initialUserState: UserState = {
-  bestUser: null,
-  worstUser: null,
-  allUsers: []
-};
 
 export interface RootState {
-  counterState: CounterState;
-  userState: UserState;
+  projects: ProjectState;
+  videos: VideoState;
 }
 
 export const rootReducer: ActionReducerMap<RootState> = {
-  counterState: counterReducer,
-  userState: userReducer
-}
+  projects: projectReducer,
+  videos: videoReducer
+};
 
-// For a function to be a reducer it should:
-// 1. pure function
-// 2. should take state and action in params
-// 3. should return new state
-// 4. should be non mutating
-export function counterReducer(state: CounterState = initialCounterState, action: MyAction) {
-  console.log('counterReducer', state, action);
-  switch (action.type) {
-    case INCREMENT_ACTION:
-      return {...state, counter: ++state.counter};
-    case DECREMENT_ACTION:
-      return {...state, counter: --state.counter};
-    case SET_COUNT_ACTION:
-      return {...state, counter: action.payload};
-    default:
-      return state;
+export const getVideosState = (state: RootState) => state.videos;
+export const getProjectState = (state: RootState) => state.projects;
+
+// createSelector combines functions. If calls first n-1 functions and passes
+// ... the output as parameter to nth function
+// It should:
+// 1. takes 2 or more functions in parameter
+// 2. first n-1 functions should have same parameter type
+// 3. nth function should take n-1 parameters
+// 4. output function will have same parameter type as first n-1 functions
+// 5. return type of output function will be same as return type of nth function
+export const getProjects = createSelector(
+  getProjectState,
+  _getProjects
+);
+
+
+
+
+
+
+
+export const getSelectedProjectVideoIds = createSelector(
+  getProjectState,
+  _getSelectedProjectVideoIds
+);
+
+export const getVideoEntities = createSelector(
+  getVideosState,
+  _getVideoEntities
+)
+
+export const getSelecteProjectVideos = createSelector(
+  getSelectedProjectVideoIds,
+  getVideoEntities,
+  (videoIds, videoEntities) => {
+    return videoIds.map(id => videoEntities[id]);
   }
-}
-
-export function userReducer(state: UserState = initialUserState, action: MyAction) {
-  console.log('userReducer', state, action);
-  return state;
-}
+)
 
 
-// For a function to be a selector function it should be:
-// 1. pure function
-// 2. take only and only state in params.
-
-export const getCounter = (state: RootState) => state.counterState.counter;
-
-export function getUsers(state: RootState) {
-  return state.userState.allUsers;
-}
