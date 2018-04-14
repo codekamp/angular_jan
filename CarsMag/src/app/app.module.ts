@@ -24,6 +24,8 @@ import { StoreTestComponent } from './store-test/store-test.component';
 import {StoreModule} from '@ngrx/store';
 import {rootReducer} from './reducers/index';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import { ProjectsComponent } from './projects/projects.component';
+import { VideosComponent } from './videos/videos.component';
 
 const myRoutes: Routes = [
   {path: 'login', component: LoginComponent, canDeactivate: [SaveDataGuard]},
@@ -47,7 +49,9 @@ const myRoutes: Routes = [
     ArticleComponent,
     NotFoundComponent,
     DashboardComponent,
-    StoreTestComponent
+    StoreTestComponent,
+    ProjectsComponent,
+    VideosComponent
   ],
   imports: [
     BrowserModule,

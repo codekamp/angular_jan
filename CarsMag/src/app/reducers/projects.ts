@@ -18,14 +18,22 @@ export interface ProjectState {
   ids: number[];
   entities: { [projectId: string]: Project };
   videos: { [projectId: string]: number[] };
+  videosLoading: { [projectId: string]: boolean };
+  videosLoaded: { [projectId: string]: boolean };
   selected: number;
+  loading: boolean;
+  loaded: boolean;
 }
 
 export const initialState: ProjectState = {
   ids: [],
   entities: null,
   videos: null,
-  selected: null
+  videosLoading: null,
+  videosLoaded: null,
+  selected: null,
+  loading: false,
+  loaded: false
 };
 
 export function projectReducer(state: ProjectState = initialState, action: Action) {
@@ -114,4 +122,15 @@ export const _getSelectedProjectId = (state: ProjectState) => state.selected;
 
 // use createSelector here
 export const _getSelectedProject = (state: ProjectState) => state.entities[state.selected];
-export const _getSelectedProjectVideoIds = (state: ProjectState) => state.videos[state.selected];
+export const _getSelectedProjectVideoIds = (state: ProjectState) => state.videos[state.selected] || [];
+
+export const _getVideoIds = (state: ProjectState, projectId: number) => {
+  return state.videos[projectId];
+};
+
+export const _projectsLoaded = (state: ProjectState) => state.loaded;
+export const _projectsLoading = (state: ProjectState) => state.loading;
+export const _selectedVideosLoading = (state: ProjectState) => state.videosLoading[state.selected];
+export const _selectedVideosLoaded = (state: ProjectState) => state.videosLoaded[state.selected];
+
+
