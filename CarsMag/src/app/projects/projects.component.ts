@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ProjectsRepository} from '../repositories/projects';
+import {ProjectManager} from '../managers/project';
 
 @Component({
   selector: 'app-projects',
@@ -8,7 +8,7 @@ import {ProjectsRepository} from '../repositories/projects';
 })
 export class ProjectsComponent implements OnInit {
 
-  constructor(private projectsRepo: ProjectsRepository) { }
+  constructor(private projectsRepo: ProjectManager) { }
 
   ngOnInit() {
     const projects$ = this.projectsRepo.getProjects();

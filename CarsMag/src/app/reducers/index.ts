@@ -1,6 +1,9 @@
 import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {
-  _getProjects, _getSelectedProjectId, _getSelectedProjectVideoIds, _getVideoIds, _projectsLoaded, _projectsLoading,
+  _getProjects, _getSelectedProject, _getSelectedProjectId, _getSelectedProjectVideoIds, _getVideoIds, _projectsLoaded,
+  _projectsLoading,
+  _selectedVideosLoaded,
+  _selectedVideosLoading,
   projectReducer,
   ProjectState
 } from './projects';
@@ -33,6 +36,16 @@ export const getProjects = createSelector(
   _getProjects
 );
 
+export const getSelectedProjectId = createSelector(
+  getProjectState,
+  _getSelectedProjectId
+);
+
+export const getSelectedProject  = createSelector (
+  getProjectState,
+  _getSelectedProject
+);
+
 export const projectsLoading = createSelector(
   getProjectState,
   _projectsLoading
@@ -42,6 +55,23 @@ export const projectsLoaded = createSelector(
   getProjectState,
   _projectsLoaded
 );
+
+export const getSelectedVideoIds = createSelector(
+  getProjectState,
+  _getSelectedProjectVideoIds
+);
+
+
+export const selectedVideosLoading = createSelector(
+  getProjectState,
+  _selectedVideosLoading
+);
+
+export const selectedVideosLoaded = createSelector(
+  getProjectState,
+  _selectedVideosLoaded
+);
+
 
 export const getSelectedVideoIds = createSelector(
   getProjectState,
@@ -77,7 +107,7 @@ export const getSelectedProjectVideoIds = createSelector(
 export const getVideoEntities = createSelector(
   getVideosState,
   _getVideoEntities
-)
+);
 
 export const getSelecteProjectVideos = createSelector(
   getSelectedProjectVideoIds,
@@ -85,6 +115,6 @@ export const getSelecteProjectVideos = createSelector(
   (videoIds, videoEntities) => {
     return videoIds.map(id => videoEntities[id]);
   }
-)
+);
 
 

@@ -4,10 +4,10 @@ import {InvidzService} from '../services/invidz';
 import {Injectable} from '@angular/core';
 import {Project} from '../models/project';
 import {Observable} from 'rxjs/Observable';
-import {ProjectsLoadedAction} from '../actions/projects';
+import {ProjectSelectedAction} from '../actions/projects';
 
 @Injectable()
-export class ProjectsRepository {
+export class ProjectManager {
   constructor(private store: Store<RootState>, private apiService: InvidzService) {
   }
 
@@ -25,5 +25,9 @@ export class ProjectsRepository {
     });
 
     return [projects$, loading$];
+  }
+
+  selectProject(id: number) {
+    this.store.dispatch(new ProjectSelectedAction(id));
   }
 }

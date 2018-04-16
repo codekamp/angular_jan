@@ -1,6 +1,7 @@
 import {Project} from '../models/project';
 import {Action} from './index';
 
+export const PROJECTS_LOADING = '[Project] loading';
 export const PROJECTS_LOADED = '[Project] loaded';
 export const PROJECTS_NEXT_PAGE_LOADED = '[Project] next page loaded';
 export const PROJECTS_DELETED = '[Project] delete';
@@ -8,6 +9,10 @@ export const PROJECTS_ADDED = '[Project] added';
 export const PROJECTS_UPDATED = '[Project] updated';
 export const PROJECT_SELECTED = '[Project] selected';
 
+
+export class ProjectsLoadingAction implements Action {
+  readonly type = PROJECTS_LOADING;
+}
 
 export class ProjectsLoadedAction implements Action {
   readonly type = PROJECTS_LOADED;

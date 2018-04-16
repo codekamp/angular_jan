@@ -6,12 +6,12 @@ import {
   PROJECT_SELECTED,
   PROJECTS_ADDED,
   PROJECTS_DELETED,
-  PROJECTS_LOADED,
+  PROJECTS_LOADED, PROJECTS_LOADING,
   PROJECTS_NEXT_PAGE_LOADED,
   PROJECTS_UPDATED
 } from '../actions/projects';
 import {StoreUtil} from '../utils/store';
-import {PROJECT_VIDEOS_LOADED} from '../actions/video';
+import {PROJECT_VIDEOS_LOADED, PROJECT_VIDEOS_LOADING} from '../actions/video';
 
 
 export interface ProjectState {
@@ -38,6 +38,12 @@ export const initialState: ProjectState = {
 
 export function projectReducer(state: ProjectState = initialState, action: Action) {
   switch (action.type) {
+    case PROJECTS_LOADING: {
+      return {
+        ...state,
+        loading: true
+      };
+    }
     case PROJECTS_LOADED: {
       const projects = action.payload;
       const ids = projects.map(p => p.id);
@@ -46,10 +52,11 @@ export function projectReducer(state: ProjectState = initialState, action: Actio
       return {
         ...state,
         ids: ids,
-        entities: entities
+        entities: entities,
+        loading: false,
+        loaded: true
       };
     }
-
     case PROJECTS_NEXT_PAGE_LOADED: {
       const projects = action.payload;
       const ids = projects.map(p => p.id);
@@ -94,14 +101,23 @@ export function projectReducer(state: ProjectState = initialState, action: Actio
         entities: newEntities
       };
     }
+    case PROJECT_VIDEOS_LOADING: {
+      const projectId = action.payload;
 
+      return {
+        ...state,
+        videosLoading: {...state.videosLoading, [projectId]: true}
+      };
+    }
     case PROJECT_VIDEOS_LOADED: {
       const projectId = action.payload.projectId;
       const videoIds = action.payload.videos.map(v => v.id);
 
       return {
         ...state,
-        videos: {...state.videos, [projectId]: videoIds}
+        videos: {...state.videos, [projectId]: videoIds},
+        videosLoading: {...state.videosLoading, [projectId]: false},
+        videosLoaded: {...state.videosLoaded, [projectId]: true}
       };
     }
 
