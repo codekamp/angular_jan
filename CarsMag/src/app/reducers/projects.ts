@@ -6,17 +6,17 @@ import {
   PROJECT_SELECTED,
   PROJECTS_ADDED,
   PROJECTS_DELETED,
-  PROJECTS_LOADED, PROJECTS_LOADING,
+  PROJECTS_LOADED,
+  PROJECTS_LOADING,
   PROJECTS_NEXT_PAGE_LOADED,
   PROJECTS_UPDATED
 } from '../actions/projects';
 import {StoreUtil} from '../utils/store';
 import {PROJECT_VIDEOS_LOADED, PROJECT_VIDEOS_LOADING} from '../actions/video';
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
 
 
-export interface ProjectState {
-  ids: number[];
-  entities: { [projectId: string]: Project };
+export interface ProjectState extends EntityState<Project> {
   videos: { [projectId: string]: number[] };
   videosLoading: { [projectId: string]: boolean };
   videosLoaded: { [projectId: string]: boolean };
@@ -25,16 +25,20 @@ export interface ProjectState {
   loaded: boolean;
 }
 
-export const initialState: ProjectState = {
-  ids: [],
-  entities: null,
-  videos: null,
-  videosLoading: null,
-  videosLoaded: null,
-  selected: null,
-  loading: false,
-  loaded: false
-};
+export const projectEntityAdapter = createEntityAdapter({
+  selectId: project => project.id
+});
+
+export const initialState: ProjectState = projectEntityAdapter.getInitialState(
+  {
+    videos: null,
+    videosLoading: null,
+    videosLoaded: null,
+    selected: null,
+    loading: false,
+    loaded: false
+  }
+);
 
 export function projectReducer(state: ProjectState = initialState, action: Action) {
   switch (action.type) {
@@ -45,17 +49,26 @@ export function projectReducer(state: ProjectState = initialState, action: Actio
       };
     }
     case PROJECTS_LOADED: {
-      const projects = action.payload;
-      const ids = projects.map(p => p.id);
-      const entities = StoreUtil.normalize(projects);
+      // const projects = action.payload;
+      // const ids = projects.map(p => p.id);
+      // const entities = StoreUtil.normalize(projects);
+      //
+      // return {
+      //   ...state,
+      //   ids: ids,
+      //   entities: entities,
+      //   loading: false,
+      //   loaded: true
+      // };
 
-      return {
+
+      const newState = {
         ...state,
-        ids: ids,
-        entities: entities,
         loading: false,
         loaded: true
       };
+
+      return projectEntityAdapter.addAll(action.payload, newState);
     }
     case PROJECTS_NEXT_PAGE_LOADED: {
       const projects = action.payload;
@@ -133,7 +146,8 @@ export function projectReducer(state: ProjectState = initialState, action: Actio
 }
 
 
-export const _getProjects = (state: ProjectState) => state.ids.map(id => state.entities[id]);
+// export const _getProjects = (state: ProjectState) => state.ids.map(id => state.entities[id]);
+export const _getProjects = projectEntityAdapter.getSelectors().selectAll;
 export const _getSelectedProjectId = (state: ProjectState) => state.selected;
 
 // use createSelector here
@@ -148,5 +162,11 @@ export const _projectsLoaded = (state: ProjectState) => state.loaded;
 export const _projectsLoading = (state: ProjectState) => state.loading;
 export const _selectedVideosLoading = (state: ProjectState) => state.videosLoading[state.selected];
 export const _selectedVideosLoaded = (state: ProjectState) => state.videosLoaded[state.selected];
+
+
+const userData = {id: 10, name: 'prashant', email: 'prashant@gmail.com'};
+
+
+const {name: hello, id: myId} = userData;
 
 
